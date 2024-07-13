@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from TorrentProviders import ygg, yts
-from Utils import tmdb_utils
+from app.TorrentProviders import ygg, yts
+from app.Utils import tmdb_utils
 from unidecode import unidecode
 
 

@@ -7,7 +7,7 @@ import string
 from bs4 import BeautifulSoup
 import unidecode
 import urllib.parse
-from Utils import tmdb_utils
+from app.Utils import tmdb_utils
 
 
 class YggTorrentMovieProvider:
