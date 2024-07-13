@@ -1,6 +1,6 @@
 import requests
 import os
-from app.Utils import tmdb_utils
+from Utils import tmdb_utils
 
 home = os.path.expanduser("~")
 

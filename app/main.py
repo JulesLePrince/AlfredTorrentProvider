@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from TorrentProviders import ygg
+from TorrentProviders import ygg, yts
 from Utils import tmdb_utils
 from unidecode import unidecode
 
@@ -32,6 +32,6 @@ def read_item(tmdb_id: int, quality:str="1080p"):
     torrent_movie_provider = ygg.YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=quality_wanted)
 
     torrent_title = unidecode(movie.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
-    file_path = torrent_movie_provider.download(path="/app/cachedTorrents", torrent_name=torrent_title)
+    file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
 
     return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
