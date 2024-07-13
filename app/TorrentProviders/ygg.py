@@ -6,11 +6,8 @@ import random
 import string
 from bs4 import BeautifulSoup
 import unidecode
-import unidecode
 import urllib.parse
-from Utils import tmdb_utils
-import os
-import yaml
+from app.Utils import tmdb_utils
 
 
 class YggTorrentMovieProvider:
@@ -115,6 +112,7 @@ class YggTorrentMovieProvider:
         sah_headers = {
             "user-agent": self.user_agent
         }
+
 
 
         # Raw html string of the link

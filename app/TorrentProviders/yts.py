@@ -1,6 +1,6 @@
 import requests
 import os
-from Utils import tmdb_utils
+from app.Utils import tmdb_utils
 
 home = os.path.expanduser("~")
 
@@ -40,6 +40,6 @@ class YtsTorrentProvider:
         return f"{path}/{torrent_name}.torrent"
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=36557 )
+    movie = tmdb_utils.Movie(movie_id=36557)
     torrent_dl = YtsTorrentProvider(base_yts_url="https://yts.mx", movie_infos=movie.data, quality_wanted=2)
     print(torrent_dl.torrent_chosen)
