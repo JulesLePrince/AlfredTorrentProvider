@@ -71,6 +71,7 @@ class YggTorrentMovieProvider:
 
         # Try to connect to ygg_torrent. If successful add the ygg session token to the cookies, else return error 400
         r1 = self.session.get(f"{self.base_url}/auth/login", headers=sah_headers, cookies=self.cppkies)
+        print(r1.text)
         try:
             yggtorrent_token = r1.cookies.get_dict()["ygg_"]
         except:
