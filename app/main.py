@@ -28,9 +28,9 @@ def read_item(tmdb_id: int, quality:str="1080p"):
             quality_wanted = 1
 
     movie = tmdb_utils.Movie(movie_id=tmdb_id)
-    #torrent_movie_provider = yts.YtsTorrentProvider(base_yts_url="https://yts.mx", movie_infos=movie.data, quality_wanted=quality_wanted)
+    torrent_movie_provider = yts.YtsTorrentProvider(base_yts_url="https://yts.mx", movie_infos=movie.data, quality_wanted=quality_wanted)
     #torrent_movie_provider = ygg.YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=quality_wanted)
-    torrent_movie_provider = sharewood.SharewoodMovieProvider(base_url="https://www.sharewood.tv", passkey="fdbcd62ae3966e61aa872d0b90173fbd", movie_infos=movie.data, quality_wanted=quality_wanted)
+    #torrent_movie_provider = sharewood.SharewoodMovieProvider(base_url="https://www.sharewood.tv", passkey="fdbcd62ae3966e61aa872d0b90173fbd", movie_infos=movie.data, quality_wanted=quality_wanted)
 
     torrent_title = unidecode(movie.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
     file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
