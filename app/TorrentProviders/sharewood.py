@@ -70,7 +70,7 @@ class SharewoodMovieProvider:
         for i in range(len(torrent_list)):
             s = 0
 
-            if torrent_list[i]["size"] / 1000000000 <= 15.0 and torrent_list[i]["seeders"] >= 2:
+            if torrent_list[i]["size"] / 1000000000 <= 20.0 and torrent_list[i]["seeders"] >= 2:
 
                 if any(word in torrent_list[i]["name"].lower() for word in multi):
                     s += biases[quality]['multi']
@@ -83,9 +83,15 @@ class SharewoodMovieProvider:
                 if any(word in torrent_list[i]["name"].lower() for word in bluray):
                     s += biases[quality]['bluray']
 
+                print(torrent_list[i])
+                print(s)
+                print("-------------------------------------")
+
                 if s > score:
                     score = s
                     n = i
+
+
 
         return torrent_list[n]
 
@@ -99,5 +105,6 @@ class SharewoodMovieProvider:
 
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=639933)
+    movie = tmdb_utils.Movie(movie_id=786892)
     torrent_dl = SharewoodMovieProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', movie_infos=movie.data, quality_wanted=2)
+    print(torrent_dl.best_media)
