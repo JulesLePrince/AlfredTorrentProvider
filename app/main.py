@@ -36,3 +36,23 @@ def read_item(tmdb_id: int, quality:str="1080p"):
     file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
 
     return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+
+@app.get("/serie/get_torrent/{tmdb_id}")
+def read_item(tmdb_id: int, quality:str="1080p", season:int=1, episode:int=1):
+    match quality:
+        case "720p":
+            quality_wanted = 0
+        case "1080p" :
+            quality_wanted = 1
+        case "4k":
+            quality_wanted = 2
+        case _:
+            quality_wanted = 1
+
+    episode = tmdb_utils.Serie(serie_id=tmdb_id, season=season, episode=episode)
+    torrent_episode_provider = sharewood.SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=episode.data, quality_wanted=quality_wanted)
+
+    torrent_title = unidecode(episode.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
+    file_path = torrent_episode_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+
+    return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')

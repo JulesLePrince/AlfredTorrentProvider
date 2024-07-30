@@ -168,8 +168,8 @@ def title_to_rarbg_search_url(title, base_url):
 
 if __name__ == '__main__':
 
-    movie = Movie(movie_id=289)
-    print(f"{movie.data['en']['title']} ({movie.data['en']['release_date']})")
+    #movie = Movie(movie_id=289)
+    #print(f"{movie.data['en']['title']} ({movie.data['en']['release_date']})")
 
-    #serie = Serie(serie_id=83867, season=1, episode=9)
-    #print(serie.data)
+    serie = Serie(serie_id=83867, season=1, episode=9)
+    print(serie.data)
