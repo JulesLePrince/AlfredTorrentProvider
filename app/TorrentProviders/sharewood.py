@@ -186,14 +186,12 @@ class SharewoodMovieProvider:
         hd = ["1080", "hd"]
         bluray = ["bluray"]
 
-        n = 0  # best list
+        n = 1000000  # best list
         score = 0  # best score
 
         for i in range(len(torrent_list)):
             s = 0
-
-            if torrent_list[i]["size"] / 1000000000 <= 20.0 and torrent_list[i]["seeders"] >= 2:
-
+            if torrent_list[i]["size"] / 1000000000 <= 20.0 and torrent_list[i]["seeders"] >= 3:
                 if any(word in torrent_list[i]["name"].lower() for word in multi):
                     s += biases[quality]['multi']
 
@@ -209,8 +207,6 @@ class SharewoodMovieProvider:
                     score = s
                     n = i
 
-
-
         return torrent_list[n]
 
     def download(self, path, torrent_name='torrent'):
@@ -222,12 +218,14 @@ class SharewoodMovieProvider:
         return f"{path}/{torrent_name}.torrent"
 
 
+
+
 if __name__ == '__main__':
 
-    """movie = tmdb_utils.Movie(movie_id=370172)
-    torrent_dl = SharewoodMovieProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', movie_infos=movie.data, quality_wanted=2)
-    print(torrent_dl.best_media)"""
-
-    serie = tmdb_utils.Serie(serie_id=94997, season=1, episode=7)
-    torrent_dl = SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie.data, quality_wanted=2)
+    movie = tmdb_utils.Movie(movie_id=370172)
+    torrent_dl = SharewoodMovieProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', movie_infos=movie.data, quality_wanted=1)
     print(torrent_dl.best_media)
+
+    """serie = tmdb_utils.Serie(serie_id=94997, season=1, episode=7)
+    torrent_dl = SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie.data, quality_wanted=2)
+    print(torrent_dl.best_media)"""

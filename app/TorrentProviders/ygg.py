@@ -21,8 +21,9 @@ class YggTorrentMovieProvider:
         #clearance_file = open('/Users/julesleprince/Developer/Alfred/alfred-server/Downloaders/CF-Clearance-Scraper/cookies.json')
         #clearance_data = json.loads(clearance_file.read())
 
-        self.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        self.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
         self.cppkies = {
+            'cf_clearance' : 'cAWJgWO2PEqrYa4TceGM_miBpwsL1sbPhkmI3Ob39.w-1722429256-1.0.1.1-JCEa0eJDOSX7gPOuuod2m.G8u3EP37y4oHbYL5ilXVHX4eYfCshFN_Y7BlNmq2b7tINu8hRvYxGee2y0DLu.zg'
         }  # Cookies
 
         # login
@@ -34,9 +35,7 @@ class YggTorrentMovieProvider:
 
         # Create the urls from the titles
         self.french_url = self.title_to_ygg_search_url(f"{movie_infos['fr']['title']} {movie_infos['fr']['release_date']}")
-        print(self.french_url)
         self.english_url = self.title_to_ygg_search_url(f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}")
-        print(self.english_url)
         self.torrent_max_size = 16
 
         # Potential movie list
@@ -66,12 +65,11 @@ class YggTorrentMovieProvider:
         # Needed headers
         sah_headers = {
             'Content-Type': m.content_type,
-            "user-agent": self.user_agent
+            "user-Agent": self.user_agent
         }
 
         # Try to connect to ygg_torrent. If successful add the ygg session token to the cookies, else return error 400
         r1 = self.session.get(f"{self.base_url}/auth/login", headers=sah_headers, cookies=self.cppkies)
-        print(r1.text)
         try:
             yggtorrent_token = r1.cookies.get_dict()["ygg_"]
         except:
