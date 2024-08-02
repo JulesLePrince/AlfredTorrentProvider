@@ -2,6 +2,7 @@ import requests
 import json
 from app.Utils import tmdb_utils
 import time
+import simplejson as json
 import os
 
 class SharewoodSerieEpisodeProvider:
@@ -137,7 +138,10 @@ class SharewoodMovieProvider:
         ####
         title_fr = f"{movie_infos['fr']['title']} {movie_infos['en']['release_date']}"
         title_en = f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}"
-        media_list = self.get_list_of_movie(title=title_fr) + self.get_list_of_movie(title=title_en)
+        media_list_fr = self.get_list_of_movie(title=title_fr)
+        time.sleep(0.5)
+        media_list_en = self.get_list_of_movie(title=title_en)
+        media_list = media_list_en
         self.best_media = self.best_movie_torrent(torrent_list=media_list, quality=self.quality)
 
     def get_list_of_movie(self, title):
