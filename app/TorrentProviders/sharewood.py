@@ -2,7 +2,6 @@ import requests
 import json
 from app.Utils import tmdb_utils
 import time
-import simplejson as json
 import os
 
 class SharewoodSerieEpisodeProvider:
