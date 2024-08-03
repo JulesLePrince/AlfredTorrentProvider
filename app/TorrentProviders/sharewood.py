@@ -135,22 +135,36 @@ class SharewoodMovieProvider:
         self.quality = quality_wanted
 
         ####
-        title_fr = f"{movie_infos['fr']['title']} {movie_infos['en']['release_date']}"
-        title_en = f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}"
+        replace_dic = {
+            ':' : ''
+        }
+        title_fr = self.format_title(f"{movie_infos['fr']['title']} {movie_infos['en']['release_date']}", replace_dic)
+        title_en = self.format_title(f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}", replace_dic)
         media_list_fr = self.get_list_of_movie(title=title_fr)
         time.sleep(0.5)
         media_list_en = self.get_list_of_movie(title=title_en)
-        media_list = media_list_en
+        media_list = media_list_en + media_list_fr
         self.best_media = self.best_movie_torrent(torrent_list=media_list, quality=self.quality)
+
+
+    def format_title(self, title, dic):
+        res = title
+        for ele in dic:
+            res = res.replace(ele, dic[ele])
+        return res
+
+
 
     def get_list_of_movie(self, title):
         search_url = f"{self.api_url}/search"
+
         params = {
             'name': title
         }
 
         # API requests
         media_list = requests.get(search_url, params=params).content.decode("utf-8")
+
 
         # bytes to strings
         media_list = json.loads(media_list)
@@ -226,10 +240,9 @@ class SharewoodMovieProvider:
 
 if __name__ == '__main__':
 
-    movie = tmdb_utils.Movie(movie_id=51497)
+    movie = tmdb_utils.Movie(movie_id=693134)
     torrent_dl = SharewoodMovieProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', movie_infos=movie.data, quality_wanted=2)
     print(torrent_dl.best_media)
-
     """serie = tmdb_utils.Serie(serie_id=94997, season=1, episode=7)
     torrent_dl = SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie.data, quality_wanted=2)
     print(torrent_dl.best_media)"""
