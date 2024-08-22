@@ -28,8 +28,11 @@ class SharewoodSerieEpisodeProvider:
         else:
             title = f"{episode_infos['fr']['title']} {season}{episode}"
 
-        media_list = self.get_list_of_serie(title=title, season=season, episode=episode)
-        self.best_media = self.best_serie_torrent(torrent_list=media_list, quality=quality_wanted)
+        self.media_list = self.get_list_of_serie(title=title, season=season, episode=episode)
+        self.best_media = self.best_serie_torrent(torrent_list=self.media_list, quality=quality_wanted)
+
+        if self.best_media == None:
+            raise ValueError
 
     def get_list_of_serie(self, title, season: str, episode:str):
         search_url = f"{self.api_url}/search"
@@ -45,6 +48,7 @@ class SharewoodSerieEpisodeProvider:
 
         # String to json
         media_list = sorted(media_list, key=lambda d: d['seeders'], reverse=True)
+
 
         final_list = []
 
@@ -143,8 +147,8 @@ class SharewoodMovieProvider:
         media_list_fr = self.get_list_of_movie(title=title_fr)
         time.sleep(0.5)
         media_list_en = self.get_list_of_movie(title=title_en)
-        media_list = media_list_en + media_list_fr
-        self.best_media = self.best_movie_torrent(torrent_list=media_list, quality=self.quality)
+        self.media_list = media_list_en + media_list_fr
+        self.best_media = self.best_movie_torrent(torrent_list=self.media_list, quality=self.quality)
 
 
     def format_title(self, title, dic):
@@ -240,9 +244,10 @@ class SharewoodMovieProvider:
 
 if __name__ == '__main__':
 
-    movie = tmdb_utils.Movie(movie_id=693134)
+    movie = tmdb_utils.Movie(movie_id=36643)
     torrent_dl = SharewoodMovieProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', movie_infos=movie.data, quality_wanted=2)
-    print(torrent_dl.best_media)
-    """serie = tmdb_utils.Serie(serie_id=94997, season=1, episode=7)
+    print(torrent_dl.media_list)
+
+    """serie = tmdb_utils.Serie(serie_id=95171, season=1, episode=7)
     torrent_dl = SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie.data, quality_wanted=2)
     print(torrent_dl.best_media)"""
