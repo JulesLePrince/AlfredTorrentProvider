@@ -40,8 +40,8 @@ def read_item(tmdb_id: int, quality:str="1080p"):
 
     try:
         torrent_movie_provider = sharewood.SharewoodMovieProvider(base_url="https://www.sharewood.tv", passkey="fdbcd62ae3966e61aa872d0b90173fbd", movie_infos=movie.data, quality_wanted=quality_wanted)
-        print(f"{movie.get_title('en')} found on Sharewood")
         file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+        print(f"{movie.get_title('en')} found on Sharewood")
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
     except :
         print(f"{movie.get_title('en')} not found on Sharewood")
@@ -72,10 +72,21 @@ def read_item(tmdb_id: int, quality:str="1080p", season:int=1, episode:int=1):
         case _:
             quality_wanted = 1
 
-    episode = tmdb_utils.Serie(serie_id=tmdb_id, season=season, episode=episode)
-    torrent_episode_provider = sharewood.SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=episode.data, quality_wanted=quality_wanted)
+    serie_episode = tmdb_utils.Serie(serie_id=tmdb_id, season=season, episode=episode)
+    torrent_title = unidecode(serie_episode.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
 
-    torrent_title = unidecode(episode.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
-    file_path = torrent_episode_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+    try :
+        torrent_episode_yggProvider = ygg.YggSerieEpisodeProvider(base_url="https://www.ygg.re", username="Radarr_Alfred", password="Jules2005", episode_infos=serie_episode.data, quality=quality_wanted)
+        file_path = torrent_episode_yggProvider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} found on Ygg")
+        return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+    except:
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} NOT found on Ygg")
 
-    return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+    try :
+        torrent_episode_sharewoodProvider = sharewood.SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie_episode.data, quality_wanted=quality_wanted)
+        file_path = torrent_episode_sharewoodProvider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} found on Sharewood")
+        return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+    except:
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} NOT found on Sharewood")
