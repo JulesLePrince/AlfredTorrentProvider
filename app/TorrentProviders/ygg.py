@@ -38,6 +38,9 @@ class YggTorrentMovieProvider:
         self.english_url = self.title_to_ygg_search_url(f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}")
         self.torrent_max_size = 30
 
+        print(self.french_url)
+        print(self.english_url)
+
         # Potential movie list
         self.potential_movie_list = self.get_list_of_films(self.french_url, 10) + self.get_list_of_films(
             self.english_url, 10)
@@ -227,7 +230,7 @@ class YggTorrentMovieProvider:
         return f"{path}/{torrent_name}.torrent"
 
     def title_to_ygg_search_url(self, title):
-        title = title.replace("-", "")
+        title = title.replace(" - ", " ")
         title = urllib.parse.quote_plus(title).lower()
         url = self.base_url + "/engine/search?name=" + title + "&do=search&order=desc&sort=seed"
         return url
@@ -477,7 +480,7 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=12444)
+    movie = tmdb_utils.Movie(movie_id=12445)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=2)
     print(torrent_dl.chosen_one)
 
