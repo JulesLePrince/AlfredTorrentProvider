@@ -36,11 +36,12 @@ class YggTorrentMovieProvider:
         # Create the urls from the titles
         self.french_url = self.title_to_ygg_search_url(f"{movie_infos['fr']['title']} {movie_infos['fr']['release_date']}")
         self.english_url = self.title_to_ygg_search_url(f"{movie_infos['en']['title']} {movie_infos['en']['release_date']}")
-        self.torrent_max_size = 16
+        self.torrent_max_size = 30
 
         # Potential movie list
         self.potential_movie_list = self.get_list_of_films(self.french_url, 10) + self.get_list_of_films(
             self.english_url, 10)
+
 
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_movie_list, quality=quality)
@@ -476,12 +477,12 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    """movie = tmdb_utils.Movie(movie_id=575264)
+    movie = tmdb_utils.Movie(movie_id=12444)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=2)
-    print(torrent_dl.chosen_one)"""
-
-    serie = tmdb_utils.Serie(serie_id=84773, season=1, episode=7)
-    torrent_dl = YggSerieEpisodeProvider(base_url="https://www.ygg.re", username="Radarr_Alfred", password="Jules2005", episode_infos=serie.data, quality=2)
     print(torrent_dl.chosen_one)
+
+    """serie = tmdb_utils.Serie(serie_id=84773, season=1, episode=7)
+    torrent_dl = YggSerieEpisodeProvider(base_url="https://www.ygg.re", username="Radarr_Alfred", password="Jules2005", episode_infos=serie.data, quality=2)
+    print(torrent_dl.chosen_one)"""
 
 
