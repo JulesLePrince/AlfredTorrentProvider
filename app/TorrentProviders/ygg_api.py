@@ -23,6 +23,8 @@ class YggTorrentMovieProvider:
         self.potential_movie_list = self.get_list_of_films(self.french_url) + self.get_list_of_films(
             self.english_url)
 
+        self.potential_movie_list = sorted(self.potential_movie_list, key=lambda d: -d['seeders'])
+
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_movie_list, quality=quality)
 
@@ -38,7 +40,6 @@ class YggTorrentMovieProvider:
         return data
 
     def best_torrent(self, film_list, quality=1):
-        print(quality)
         biases = [
             {
                 'multi': 30,
@@ -75,7 +76,8 @@ class YggTorrentMovieProvider:
             s = 0
             film_title = film_list[i]["title"].lower().replace('multivision', '')
 
-            if film_list[i]["size"]/1000000000 <= self.torrent_max_size:
+            if film_list[i]["size"]/1000000000 <= self.torrent_max_size and film_list[i]['seeders'] >= 3:
+
 
                 if any(word in film_title for word in multi):
                     s += biases[quality]['multi']
@@ -89,6 +91,7 @@ class YggTorrentMovieProvider:
                 if any(word in film_title for word in bluray):
                     s += biases[quality]['bluray']
 
+                print(f"film : {film_list[i]} \n score : {s} \n \n")
                 if s > score:
                     score = s
                     res = film_list[i]
@@ -149,6 +152,8 @@ class YggSerieEpisodeProvider:
         # Potential movie list
         self.potential_episode_list = self.get_list_of_films(self.french_url) + self.get_list_of_films(
             self.english_url)
+
+        self.potential_episode_list = sorted(self.potential_episode_list, key=lambda d: -d['seeders'])
 
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_episode_list, quality=quality)
@@ -216,6 +221,7 @@ class YggSerieEpisodeProvider:
                 if any(word in film_title for word in bluray):
                     s += biases[quality]['bluray']
 
+
                 if s > score:
                     score = s
                     res = film_list[i]
@@ -245,13 +251,13 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    """movie = tmdb_utils.Movie(movie_id=166426)
+    movie = tmdb_utils.Movie(movie_id=438631)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
-    print(torrent_dl.chosen_one)"""
-
-    serie = tmdb_utils.Serie(serie_id=203744, season=1, episode=7)
-    torrent_dl = YggSerieEpisodeProvider(base_url="", passkey="cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", episode_infos=serie.data, quality=2)
     print(torrent_dl.chosen_one)
+
+    """serie = tmdb_utils.Serie(serie_id=203744, season=1, episode=7)
+    torrent_dl = YggSerieEpisodeProvider(base_url="", passkey="cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", episode_infos=serie.data, quality=2)
+    print(torrent_dl.chosen_one)"""
 
 
