@@ -23,7 +23,7 @@ class YggTorrentMovieProvider:
 
         self.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
         self.cppkies = {
-            'cf_clearance' : 'cAWJgWO2PEqrYa4TceGM_miBpwsL1sbPhkmI3Ob39.w-1722429256-1.0.1.1-JCEa0eJDOSX7gPOuuod2m.G8u3EP37y4oHbYL5ilXVHX4eYfCshFN_Y7BlNmq2b7tINu8hRvYxGee2y0DLu.zg'
+            'cf_clearance' : 'ubbg.XcGGwuTz1SwDqZETwX59LBnAcpncNJnyezGS94-1722679481-1.0.1.1-jlIHk50CYWqqru5at.cuOymt.RPLBDv6U4OTzdLOVWCEtlFvlTxPRdlxLIKBRbd9Hl07WffviXEULXOg48lBgQ'
         }  # Cookies
 
         # login
@@ -44,7 +44,6 @@ class YggTorrentMovieProvider:
         # Potential movie list
         self.potential_movie_list = self.get_list_of_films(self.french_url, 10) + self.get_list_of_films(
             self.english_url, 10)
-
 
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_movie_list, quality=quality)
@@ -69,11 +68,14 @@ class YggTorrentMovieProvider:
         # Needed headers
         sah_headers = {
             'Content-Type': m.content_type,
-            "user-Agent": self.user_agent
+            "User-Agent": self.user_agent,
         }
 
         # Try to connect to ygg_torrent. If successful add the ygg session token to the cookies, else return error 400
         r1 = self.session.get(f"{self.base_url}/auth/login", headers=sah_headers, cookies=self.cppkies)
+
+        print(r1.text)
+
         try:
             yggtorrent_token = r1.cookies.get_dict()["ygg_"]
         except:
@@ -480,7 +482,7 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=12445)
+    movie = tmdb_utils.Movie(movie_id=10436)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=2)
     print(torrent_dl.chosen_one)
 

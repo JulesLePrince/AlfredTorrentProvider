@@ -240,8 +240,6 @@ class SharewoodMovieProvider:
         return f"{path}/{torrent_name}.torrent"
 
 
-
-
 if __name__ == '__main__':
 
     movie = tmdb_utils.Movie(movie_id=36643)
