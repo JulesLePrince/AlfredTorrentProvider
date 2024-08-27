@@ -38,6 +38,7 @@ class YggTorrentMovieProvider:
         return data
 
     def best_torrent(self, film_list, quality=1):
+        print(quality)
         biases = [
             {
                 'multi': 30,
@@ -102,7 +103,11 @@ class YggTorrentMovieProvider:
 
         # We save torrent into path
         torrent = requests.get(torrent_url, allow_redirects=True)
+        if len(torrent.content) < 100:
+            raise ValueError
+
         open(f"{path}/{torrent_name}.torrent", 'wb').write(torrent.content)
+
 
         return f"{path}/{torrent_name}.torrent"
 
@@ -160,6 +165,7 @@ class YggSerieEpisodeProvider:
         return data
 
     def best_torrent(self, film_list, quality=1):
+
         biases = [
             {
                 'multi': 30,
@@ -225,6 +231,8 @@ class YggSerieEpisodeProvider:
         # We save torrent into path
         torrent = requests.get(torrent_url, allow_redirects=True)
         open(f"{path}/{torrent_name}.torrent", 'wb').write(torrent.content)
+        if len(torrent.content) < 100:
+            raise ValueError
 
         return f"{path}/{torrent_name}.torrent"
 
@@ -237,12 +245,12 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    """movie = tmdb_utils.Movie(movie_id=786892)
+    """movie = tmdb_utils.Movie(movie_id=166426)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
     print(torrent_dl.chosen_one)"""
 
-    serie = tmdb_utils.Serie(serie_id=84773, season=1, episode=7)
+    serie = tmdb_utils.Serie(serie_id=203744, season=1, episode=7)
     torrent_dl = YggSerieEpisodeProvider(base_url="", passkey="cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", episode_infos=serie.data, quality=2)
     print(torrent_dl.chosen_one)
 

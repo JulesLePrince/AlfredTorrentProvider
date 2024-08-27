@@ -31,7 +31,7 @@ def read_item(tmdb_id: int, quality:str="1080p"):
     torrent_title = unidecode(movie.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
 
     try:
-        torrent_movie_provider = ygg_api.YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
+        torrent_movie_provider = ygg_api.YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=quality_wanted)
         print(f"{movie.get_title('en')} found on Ygg")
         file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
