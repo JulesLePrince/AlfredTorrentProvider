@@ -25,6 +25,7 @@ class YggTorrentMovieProvider:
 
         self.potential_movie_list = sorted(self.potential_movie_list, key=lambda d: -d['seeders'])
 
+        print(self.french_url)
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_movie_list, quality=quality)
 
@@ -91,7 +92,6 @@ class YggTorrentMovieProvider:
                 if any(word in film_title for word in bluray):
                     s += biases[quality]['bluray']
 
-                print(f"film : {film_list[i]} \n score : {s} \n \n")
                 if s > score:
                     score = s
                     res = film_list[i]
@@ -102,7 +102,7 @@ class YggTorrentMovieProvider:
         """
         Download a torrent from its id
         """
-        torrent_url = f"https://yggapi.eu/torrent/{self.chosen_one['id']}/download?passkey=cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9"
+        torrent_url = f"https://yggapi.eu/torrent/{self.chosen_one['id']}/download?passkey={self.passkey}"
 
         # We save torrent into path
         torrent = requests.get(torrent_url, allow_redirects=True)
@@ -115,10 +115,11 @@ class YggTorrentMovieProvider:
         return f"{path}/{torrent_name}.torrent"
 
     def title_to_ygg_search_url(self, title):
-        title = title.replace(" - ", " ")
+        title = title.replace(" - ", " ").replace("’", " ")
         title = urllib.parse.quote_plus(title).lower()
         url = f"https://yggapi.eu/torrents?page=1&q={title}&order_by=uploaded_at&per_page=25"
         return url
+
 
 class YggSerieEpisodeProvider:
     def __init__(self, base_url, passkey, episode_infos: dict = None, quality=1):
@@ -251,7 +252,7 @@ class YggSerieEpisodeProvider:
 
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=438631)
+    movie = tmdb_utils.Movie(movie_id=820696)
     torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
     print(torrent_dl.chosen_one)
