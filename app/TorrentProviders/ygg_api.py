@@ -43,21 +43,21 @@ class YggTorrentMovieProvider:
     def best_torrent(self, film_list, quality=1):
         biases = [
             {
-                'multi': 30,
+                'multi': 0 if self.movie_infos["en"]["original_language"] == 0 else 30,
                 'four_k': 10,
                 'hd': 20,
                 'avc': 8,
                 'bluray': 5
             },
             {
-                'multi': 30,
+                'multi': 0 if self.movie_infos["en"]["original_language"] == 'fr' else 30,
                 'four_k': 10,
                 'hd': 20,
                 'avc': 8,
                 'bluray': 5
             },
             {
-                'multi': 30,
+                'multi': 0 if self.movie_infos["en"]["original_language"] == 'fr' else 30,
                 'four_k': 20,
                 'hd': 10,
                 'avc': 8,
@@ -92,6 +92,7 @@ class YggTorrentMovieProvider:
                 if any(word in film_title for word in bluray):
                     s += biases[quality]['bluray']
 
+                #print(f"title: {film_title} \n score: {s}\n\n")
                 if s > score:
                     score = s
                     res = film_list[i]
@@ -273,7 +274,7 @@ def remove_accents(text):
 
 if __name__ == '__main__':
     movie = tmdb_utils.Movie(movie_id=660000)
-    torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=1)
+    torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
     print(torrent_dl.chosen_one)
 

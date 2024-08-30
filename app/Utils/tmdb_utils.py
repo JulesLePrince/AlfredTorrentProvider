@@ -53,7 +53,8 @@ class Movie:
             'overview': m.overview,
             'poster_url': "https://image.tmdb.org/t/p/w1280" + m.poster_path,
             'release_date': m.release_date[:4],
-            'imdb_id': m['imdb_id']
+            'imdb_id': m['imdb_id'],
+            'original_language': m["original_language"]
         }
 
     def get_imdb_id(self):
@@ -168,8 +169,8 @@ def title_to_rarbg_search_url(title, base_url):
 
 if __name__ == '__main__':
 
-    #movie = Movie(movie_id=289)
-    #print(f"{movie.data['en']['title']} ({movie.data['en']['release_date']})")
+    movie = Movie(movie_id=660000)
+    print(movie.data)
 
-    serie = Serie(serie_id=83867, season=1, episode=9)
-    print(serie.data)
+    """serie = Serie(serie_id=83867, season=1, episode=9)
+    print(serie.data)"""
