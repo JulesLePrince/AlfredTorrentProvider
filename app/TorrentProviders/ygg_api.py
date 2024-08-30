@@ -4,6 +4,7 @@ sys.path.append("/Users/julesleprince/Developer/Alfred/alfred-server/Utils")
 import requests
 import urllib.parse
 from app.Utils import tmdb_utils
+import unicodedata
 
 
 class YggTorrentMovieProvider:
@@ -23,9 +24,8 @@ class YggTorrentMovieProvider:
         self.potential_movie_list = self.get_list_of_films(self.french_url) + self.get_list_of_films(
             self.english_url)
 
-        self.potential_movie_list = sorted(self.potential_movie_list, key=lambda d: -d['seeders'])
+        self.potential_movie_list = self.get_potential_movie_list()
 
-        print(self.french_url)
         # Best torrent algorithm
         self.chosen_one = self.best_torrent(self.potential_movie_list, quality=quality)
 
@@ -119,6 +119,21 @@ class YggTorrentMovieProvider:
         title = urllib.parse.quote_plus(title).lower()
         url = f"https://yggapi.eu/torrents?page=1&q={title}&order_by=uploaded_at&per_page=25"
         return url
+
+
+    def coincides(self, file_title, movie_title):
+        return remove_accents(file_title).lower()[0] == remove_accents(movie_title).lower()[0]
+    def filter_potential_movies(self, pot_list, movie_title):
+        res = []
+        for file in pot_list:
+            if self.coincides(file['title'], movie_title):
+                res.append(file)
+        return res
+
+    def get_potential_movie_list(self):
+        french_list = self.filter_potential_movies(self.get_list_of_films(self.french_url), self.movie_infos["fr"]["title"])
+        english_list = self.filter_potential_movies(self.get_list_of_films(self.english_url), self.movie_infos["en"]["title"])
+        return french_list + english_list
 
 
 class YggSerieEpisodeProvider:
@@ -249,11 +264,16 @@ class YggSerieEpisodeProvider:
         url = f"https://yggapi.eu/torrents?page=1&q={title}&order_by=uploaded_at&per_page=25"
         return url
 
-
+def remove_accents(text):
+    # Normalize the text to decompose combined characters
+    normalized_text = unicodedata.normalize('NFD', text)
+    # Filter out combining characters (accents)
+    text_without_accents = ''.join(char for char in normalized_text if not unicodedata.combining(char))
+    return text_without_accents
 
 if __name__ == '__main__':
-    movie = tmdb_utils.Movie(movie_id=820696)
-    torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
+    movie = tmdb_utils.Movie(movie_id=660000)
+    torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=1)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
     print(torrent_dl.chosen_one)
 
