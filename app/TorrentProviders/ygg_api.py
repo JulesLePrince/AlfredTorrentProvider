@@ -7,7 +7,7 @@ from app.Utils import tmdb_utils
 import unicodedata
 
 
-class YggTorrentMovieProvider:
+class YggApiTorrentMovieProvider:
     def __init__(self, base_url, passkey, movie_infos: dict = None, quality=1):
         self.base_url = base_url  # Url of ygg_torrent
         self.passkey = passkey  # Password
@@ -137,7 +137,7 @@ class YggTorrentMovieProvider:
         return french_list + english_list
 
 
-class YggSerieEpisodeProvider:
+class YggApiSerieEpisodeProvider:
     def __init__(self, base_url, passkey, episode_infos: dict = None, quality=1):
         self.base_url = base_url  # Url of ygg_torrent
         self.passkey = passkey  # Password

@@ -31,12 +31,20 @@ def read_item(tmdb_id: int, quality:str="1080p"):
     torrent_title = unidecode(movie.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
 
     try:
-        torrent_movie_provider = ygg_api.YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=quality_wanted)
+        torrent_movie_provider = ygg.YggTorrentMovieProvider("https://www.ygg.re", "Radarr_Alfred", "Jules2005", movie.data, quality=quality_wanted)
         print(f"{movie.get_title('en')} found on Ygg")
         file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
     except:
         print(f"{movie.get_title('en')} not found on Ygg")
+
+    try:
+        torrent_movie_provider = ygg_api.YggApiSerieEpisodeProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=quality_wanted)
+        print(f"{movie.get_title('en')} found on YggApi")
+        file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+        return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+    except:
+        print(f"{movie.get_title('en')} not found on YggApi")
 
     try:
         torrent_movie_provider = sharewood.SharewoodMovieProvider(base_url="https://www.sharewood.tv", passkey="fdbcd62ae3966e61aa872d0b90173fbd", movie_infos=movie.data, quality_wanted=quality_wanted)
@@ -73,12 +81,20 @@ def read_item(tmdb_id: int, quality:str="1080p", season:int=1, episode:int=1):
     torrent_title = unidecode(serie_episode.data['en']['title']).replace(' ', '_').replace("'", "_").lower()
 
     try :
-        torrent_episode_yggProvider = ygg_api.YggSerieEpisodeProvider(base_url="https://www.ygg.re", passkey="cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", episode_infos=serie_episode.data, quality=quality_wanted)
+        torrent_episode_yggProvider = ygg.YggSerieEpisodeProvider(base_url="https://www.ygg.re", username="Radarr_Alfred", password="Jules2005", episode_infos=serie_episode.data, quality=quality_wanted)
         file_path = torrent_episode_yggProvider.download(path="app/cachedTorrents", torrent_name=torrent_title)
         print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} found on Ygg")
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
     except:
         print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} NOT found on Ygg")
+
+    try :
+        torrent_episode_yggProvider = ygg_api.YggApiSerieEpisodeProvider(base_url="https://www.ygg.re", passkey="cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", episode_infos=serie_episode.data, quality=quality_wanted)
+        file_path = torrent_episode_yggProvider.download(path="app/cachedTorrents", torrent_name=torrent_title)
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} found on YggApi")
+        return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
+    except:
+        print(f"{serie_episode.data['en']['title']} Season {season}, Episode {episode} NOT found on YggApi")
 
     try :
         torrent_episode_sharewoodProvider = sharewood.SharewoodSerieEpisodeProvider(passkey='fdbcd62ae3966e61aa872d0b90173fbd', base_url='https://www.sharewood.tv', episode_infos=serie_episode.data, quality_wanted=quality_wanted)
