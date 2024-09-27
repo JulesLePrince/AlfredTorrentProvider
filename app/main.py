@@ -39,11 +39,12 @@ def read_item(tmdb_id: int, quality:str="1080p"):
         print(f"{movie.get_title('en')} not found on Ygg")
 
     try:
-        torrent_movie_provider = ygg_api.YggApiSerieEpisodeProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=quality_wanted)
+        torrent_movie_provider = ygg_api.YggApiTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=quality_wanted)
         print(f"{movie.get_title('en')} found on YggApi")
         file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
-    except:
+    except Exception as error:
+        print(error)
         print(f"{movie.get_title('en')} not found on YggApi")
 
     try:
@@ -51,7 +52,7 @@ def read_item(tmdb_id: int, quality:str="1080p"):
         file_path = torrent_movie_provider.download(path="app/cachedTorrents", torrent_name=torrent_title)
         print(f"{movie.get_title('en')} found on Sharewood")
         return FileResponse(path=file_path, filename=f"{torrent_title}.torrent", media_type='text/torrent')
-    except :
+    except Exception as error:
         print(f"{movie.get_title('en')} not found on Sharewood")
 
     try:

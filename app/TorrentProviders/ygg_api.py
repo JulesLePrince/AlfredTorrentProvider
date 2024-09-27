@@ -274,7 +274,7 @@ def remove_accents(text):
 
 if __name__ == '__main__':
     movie = tmdb_utils.Movie(movie_id=660000)
-    torrent_dl = YggTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
+    torrent_dl = YggApiTorrentMovieProvider("https://www.ygg.re", "cIuo0dI1QQ7L0Vu4XLOlLCoKo0Cm3zO9", movie.data, quality=2)
     torrent_dl.download(path="/Users/julesleprince/Downloads", torrent_name="test")
     print(torrent_dl.chosen_one)
 
